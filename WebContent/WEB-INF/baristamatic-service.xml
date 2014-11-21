@@ -1,0 +1,10 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+<!-- Instanciate a baristaService so it can be Autowired into Controllers -->
+    <bean id="baristaService"
+        class="com.taters.bm.services.BaristaService" />
+
+</beans>

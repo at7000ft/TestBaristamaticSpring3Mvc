@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+        
+<!-- Read automagically after web.xml based on the servlet name 'baristamatic'       -->
+
+   <!-- Scanning annotations enablement on package under com.taters -->
+   <context:component-scan base-package="com.taters" />
+
+   <!-- Turns on support for mapping requests to Spring MVC @Controller methods Also registers default 
+      Formatters and Validators for use across all @Controllers -->
+   <mvc:annotation-driven />
+
+   <!-- Since the DispatherServlet receives all requests from root level down it cannot get any static 
+      content in the root webapp folder (likes images and styles) so this maps any requests for image files 
+      like http://localhost:8080/TestBaristamaticSpring3Mvc/barista/images/tamada.jpg to http://localhost:8080/TestBaristamaticSpring3Mvc/images/tamada.jpg -->
+   <mvc:resources mapping="/barista/images/**" location="/images/" />
+
+   <!-- When the root URL is accessed (http://localhost:8080/TestBaristamaticSpring3Mvc) pass <view-name> 
+      to the internalResourceResolver which will return the /WEB-INF/jsp/<view-name>.jsp page -->
+   <mvc:view-controller path="/" view-name="simple-welcome" />
+
+   <!-- Views mapped in JSPs under /WEB-INF/jsp -->
+   <bean id="internalResourceResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+      <property name="prefix" value="/WEB-INF/jsp/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+</beans>

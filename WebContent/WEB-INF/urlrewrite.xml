@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+
+<!--
+   * So a URL like so:
+   * http://localhost:8080/pizzashop/topping/form
+   * would be rewritten to:
+   * http://localhost:8080/pizzashop/app/topping/form
+before it reaches Spring MVC. The dispatcher servlet is mapped to /app/* (see your web.xml) and therefore the dispatcher 
+servlet is triggered and takes care of routing the request to the topping controller.
+
+Once the topping controller is finished processing the request it returns the result like /topping which 
+would result in a URL like
+
+http://localhost:8080/pizzashop/app/topping
+
+Again, the URL rewriting kicks in at this stage to 'clean up' the URL presented in your browser so it looks better:
+
+http://localhost:8080/pizzashop/topping
+
+So there is no need to define /app anywhere in your controller mappings at all.
+
+The special case is /static and /resource which are used to point to resources which are not 
+supposed to be triggering the dispatcher servlet. These resources are images, CSS, JS, etc. 
+If you look at the jspx files you will see that in order to use these resources you need to add 
+/static to your URL so the dispatcher servlet is not triggered.
+-->
+<urlrewrite default-match-type="wildcard">
+   <!-- Any URL coming in to /images/xx/yy/pic.gif will go to /images/pic.gif -->
+   <rule>
+      <from>/images/**</from>
+      <to>/images/$1</to>
+   </rule>
+   <rule>
+      <from>/scripts/**</from>
+      <to>/scripts/$1</to>
+   </rule>
+   <rule>
+      <from>/styles/**</from>
+      <to>/styles/$1</to>
+   </rule>
+   
+<!-- Any URL coming in to http://localhost:8080/TestBaristamaticSpring3Mvc/xx/yy/main goes to ~/barista/main  -->
+   <rule>
+      <from>/**</from>
+      <to>/barista/$1</to>
+   </rule>
+   <outbound-rule>
+      <from>/barista/**</from>
+      <to>/$1</to>
+   </outbound-rule>
+</urlrewrite>
